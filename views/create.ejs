@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include include/head.ejs %>
+    <body>
+        <div class="wrapper">
+            <%- include include/header.ejs %>
+            <!-- HTML for community creation !-->
+            <main class="main">
+                <section id="create">
+                    <div class="container">
+                        <h2>Create a new community</h2>
+                        <h3>Name *</h3>
+                        <input type="text" id="name" placeholder="Name" />
+                        <h3>Short description *</h3>
+                        <input type="text" id="description" placeholder="Brief description">
+                        <h3>Image Url *</h3>
+                        <input type="text" id="image" placeholder="Image Url">
+                        <h3>Administrators</h3>
+                        <input type="text" id="admins" placeholder="Set administrators">
+                        <h3>Moderators</h3>
+                        <input type="text" id="moderators" placeholder="Set moderators">
+                        <h3>Post selection *</h3>
+                        <select id="type_community">
+                        <option name="whitelist">Whitelist only</option>
+                        <option name="open">Open</option>
+                        </select>
+                        <h3>Tag *</h3>
+                        <input type="text" id="tags" placeholder="Eligible Tag">
+                        <h3 class="whitelist">Whitelist</h3>
+                        <input type="text" id="whitelist" class="whitelist" placeholder="Whitelisted users (separated by comma)">
+                        <h3 class="blacklist">Blacklist</h3>
+                        <input type="text" class="blacklist" id="blacklist" placeholder="Blacklisted users (separated by comma)"><br /><br />
+                        <button id="create_community">Create!</button>
+                        <p id="error_create" style="color:red;display:none;">Please fill all the non optional fields.</p>
+                    </div>
+                </section>
+            </main>
+            <%- include include/footer.ejs %>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/1.11.0/parse.min.js"></script>
+        <script src="/public/assets/js/scripts.js"></script>
+        <script>
+            /* Mobile menu openning */
+        $(document).ready(function() {
+            //Show whitelist or blacklist according to the type of community
+            $("#type_community").change(function() {
+                $(".whitelist").toggle($(
+                    "#type_community option[name='whitelist']"
+                ).prop("selected") == true);
+                $(".blacklist").toggle($(
+                    "#type_community option[name='open']"
+                ).prop("selected") == true);
+            });
+
+            //If all fields are completed, send back the information to create the community
+            $("#create_community").click(function() {
+                if ($("#name").val() != "" &&
+                    $("#description").val() != "" &&
+                    $("#image").val() != "" &&
+                    $("#tags").val() != "" &&
+                    $("#max_upvote").val() != "" &&
+                    $("#vote_when").val() != "") {
+                    const obj = {
+                        name: $("#name").val(),
+                        description: $("#description").val(),
+                        image: $("#image").val(),
+                        tags: $("#tags").val(),
+                        type_community: $(
+                            "#type_community option:selected"
+                        ).val(),
+                        administrators: $("#admins").val(),
+                        moderators: $("#moderators").val(),
+                        whitelist: $("#whitelist").val(),
+                        id:null,
+                        blacklist: $("#blacklist").val(),
+                        owner: "<%=session.name %>"
+                    };
+                      $.ajax({
+                           type: 'POST',
+                           data: JSON.stringify(obj),
+                           contentType: 'application/json',
+                           url: '/community'
+                      })
+                      .done(function() {
+                        console.log("done");
+                        window.location.href="/view/"+obj.name;
+                     })
+                      .fail(function() {
+                        console.log("error");
+                        window.location.href="/error/creation_error";
+                      });
+                }
+                else $("#error_create").show();
+            });
+
+            const menuMainButton = $('.menu-icon');
+            menuMainButton.click(function() {
+                $('.mobile-menu').toggleClass('open');
+            });
+        });
+        </script>
+    </body>
+</html>

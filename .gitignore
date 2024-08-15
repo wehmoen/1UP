@@ -30,3 +30,9 @@ node_modules
 *~
 
 .env
+
+# Token cache
+stateCache.json
+
+# Config info
+config.js

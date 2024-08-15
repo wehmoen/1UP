@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include include/head.ejs %>
+    <body>
+        <div class="wrapper">
+            <%- include include/header.ejs %>
+<!-- HTML for erros !-->
+            <div class='outline'>
+                <div id="inner">
+                  <%= error_message %>
+                </div>
+            </div>
+          <%- include include/footer.ejs %>
+        </div>
+
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+          <script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/1.11.0/parse.min.js"></script>
+          <script src="/public/assets/js/scripts.js"></script>
+          <script>
+          /* Mobile menu openning */
+          $(document).ready(function() {
+
+            /* Mobile menu openning */
+            const menuMainButton = $('.menu-icon');
+            menuMainButton.click(function() {
+                $('.mobile-menu').toggleClass('open');
+            });
+            
+            //Show whitelist or blacklist according to the type of community
+            $("#type_community").change(function() {
+                $(".whitelist").toggle($(
+                    "#type_community option[name='whitelist']"
+                ).prop("selected") == true);
+                $(".blacklist").toggle($(
+                    "#type_community option[name='open']"
+                ).prop("selected") == true);
+            });
+        });
+
+        
+
+          </script>
+      </body>
+</html>
